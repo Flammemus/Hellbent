@@ -13,6 +13,7 @@ class Player:
             "Talisman": None
         }
         self.inventory = []
+        self.skills = []
 
     def equipGear(player, item):
         player.equipment[item.type] = item
@@ -32,7 +33,7 @@ class Player:
                     self.energyMax += item.energy
 
 class Enemy:
-    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense):
+    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense, image):
         self.name = name
         self.health = health
         self.healthMax = healthMax
@@ -40,7 +41,8 @@ class Enemy:
         self.energyMax = energyMax
         self.damage = damage
         self.defense = defense
-
+        self.image = image
+        
 class Equipment:
     list = []
     def __init__(self, name, type, damage, defense, energy, worth, description):
@@ -71,3 +73,29 @@ class Area:
     
     def __repr__(self):
         return self.name
+    
+class Skill:
+    def __init__(self, bookName, worth, type, name):
+        self.bookName = bookName
+        self.worth = worth
+        self.type = type
+        self.name = name
+
+class Active(Skill):
+    def __init__(self, bookName, worth, type, name, damage, energyCost, cooldown, bonus):
+        super().__init__(bookName, worth, type, name)
+
+        self.damage = damage
+        self.energyCost = energyCost
+        self.cooldown = cooldown
+        self.bonus = bonus
+
+class Passive(Skill):
+    def __init__(self, bookName, worth, type, name, bonus):
+        super().__init__(bookName, worth, type, name)
+
+        self.bookName = bookName
+        self.worth = worth
+        self.type = type
+        self.name = name
+        self.bonus = bonus

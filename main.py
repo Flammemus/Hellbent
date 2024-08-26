@@ -1,6 +1,16 @@
+import survey
+import os
+import random
+
+from ascii_magic import from_image
+from art import *
+
 from classes import *
 from objects import *
-import survey
+
+def clear_console():
+    # Clear the console screen
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 # playerName = input("Username: ")
 playerName = "Flabbe"
@@ -27,9 +37,19 @@ def printEquipment(equipment, label=""):
 
     print(" - ".join(allDetails))
 
-def battle(enemy):
-    print("Battling")
-    print(enemy)
+def printAllEquipment(type):
+    if player.equipment[type] != None:
+        printEquipment(player.equipment[type], label=f"Equipped {type}: ")
+    else:
+        print(f"Equipped {type}: None")
+
+def battle(player, enemy):
+    tprint(enemy.name)
+    enemyProfile = from_image(enemy.image)
+    enemyProfile.to_terminal(columns=40)
+    print("@=======================================@\n")
+
+    print(f"{player.name} Battling")
     print(f"{enemy.name} {enemy.health}")
 
 gameloop = True
@@ -42,8 +62,10 @@ while gameloop:
     action = currentArea.actions[actionIndex]
     print()
 
+    clear_console()
     if action == "Hunt":
-        battle(mudRat)
+        enemy = random.choice(currentArea.enemies)
+        battle(player, enemy)
     
     if action == "Stats":
         print("Stats:")
@@ -65,18 +87,9 @@ while gameloop:
         inventoryNames = [item.name for item in player.inventory]
         equipmentInventoryNames = [item.name for item in player.inventory if isinstance(item, Equipment)]
 
-        if player.equipment["Weapon"] != None:
-            printEquipment(player.equipment["Weapon"], label="Equipped Weapon: ")
-        else:
-            print(f"Equipped weapon: None")
-        if player.equipment["Armor"] != None:
-            printEquipment(player.equipment["Armor"], label="Equipped Armor: ")
-        else:
-            print(f"Equipped Armor: None")
-        if player.equipment["Talisman"] != None:
-            printEquipment(player.equipment["Talisman"], label="Equipped Talisman: ")
-        else:
-            print(f"Equipped Talisman: None\n")
+        printAllEquipment("Weapon")
+        printAllEquipment("Armor")
+        printAllEquipment("Talisman")
 
         if not player.inventory:
             print("\nYour inventory is empty.\n")
@@ -84,7 +97,7 @@ while gameloop:
 
         print("\nYour items:\n")
         for item in player.inventory:
-            printEquipment(item)
+            print(f"{item.name} - {item.type}")
         print()
 
         action = survey.routines.select("Available action:", options = ("Inspect", "Equip", "Back"))
