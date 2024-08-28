@@ -1,5 +1,5 @@
 class Player:
-    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense):
+    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense, speed, critChance, critEff):
         self.name = name
         self.health = health
         self.healthMax = healthMax
@@ -7,11 +7,15 @@ class Player:
         self.energyMax = energyMax
         self.damage = damage
         self.defense = defense
+        self.speed = speed
+        self.critChance = critChance
+        self.critEff = critEff
         self.equipment = {
             "Weapon": None,
             "Armor": None,
             "Talisman": None
         }
+        self.equipmentInventory = []
         self.inventory = []
         self.skills = []
 
@@ -21,19 +25,21 @@ class Player:
     def updateStats(self):
         self.damage = 0
         self.defense = 0
+        self.speed = 10
         self.energyMax = 50
+        self.critChance = 5
+        self.critEff = 50
 
         for _, item in self.equipment.items():
             if item:
-                if item.damage is not None:
-                    self.damage += item.damage
-                if item.defense is not None:
-                    self.defense += item.defense
-                if item.energy is not None:
-                    self.energyMax += item.energy
+                for attr in ['damage', 'defense', 'energy', 'critChance', 'critEff', 'speed']:
+                    value = getattr(item, attr, None)
+                    if value is not None:
+                        setattr(self, attr, getattr(self, attr) + value)
+
 
 class Enemy:
-    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense, image):
+    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense, speed, critChance, critEff, image):
         self.name = name
         self.health = health
         self.healthMax = healthMax
@@ -41,17 +47,23 @@ class Enemy:
         self.energyMax = energyMax
         self.damage = damage
         self.defense = defense
+        self.speed = speed
+        self.critChance = critChance
+        self.critEff = critEff
         self.image = image
         
 class Equipment:
     list = []
-    def __init__(self, name, type, damage, defense, energy, worth, description):
+    def __init__(self, name, type, worth, damage, critChance, critEff, defense, speed, energy, description):
         self.name = name
         self.type = type
-        self.damage = damage
-        self.defense = defense
-        self.energy = energy
         self.worth = worth
+        self.damage = damage
+        self.critChance = critChance
+        self.critEff = critEff
+        self.defense = defense
+        self.speed = speed
+        self.energy = energy
         self.description = description
 
         Equipment.list.append(self)
@@ -61,6 +73,14 @@ class Item:
         self.name = name
         self.type = type
         self.worth = worth
+
+class Treatise:
+    def __init__(self, name, worth, type, skill, description):
+        self.name = name
+        self.worth = worth
+        self.type = type
+        self.skill = skill
+        self.description = description
 
 class Area:
     list = []
@@ -73,29 +93,18 @@ class Area:
     
     def __repr__(self):
         return self.name
-    
-class Skill:
-    def __init__(self, bookName, worth, type, name):
-        self.bookName = bookName
-        self.worth = worth
+
+class Active():
+    def __init__(self, type, name, damage, energyCost, cooldown, bonus):
         self.type = type
         self.name = name
-
-class Active(Skill):
-    def __init__(self, bookName, worth, type, name, damage, energyCost, cooldown, bonus):
-        super().__init__(bookName, worth, type, name)
-
         self.damage = damage
         self.energyCost = energyCost
         self.cooldown = cooldown
         self.bonus = bonus
 
-class Passive(Skill):
-    def __init__(self, bookName, worth, type, name, bonus):
-        super().__init__(bookName, worth, type, name)
-
-        self.bookName = bookName
-        self.worth = worth
+class Passive():
+    def __init__(self, type, name, bonus):
         self.type = type
         self.name = name
         self.bonus = bonus

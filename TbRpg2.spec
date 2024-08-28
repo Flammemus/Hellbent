@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('images/*', 'images')],
     hiddenimports=['survey._core._io_os_nt', 'survey._core._helpers'],
     hookspath=[],
     hooksconfig={},
