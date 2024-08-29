@@ -1,6 +1,7 @@
 import survey
 import os
 import random
+import time
 
 from ascii_magic import from_image # Copyright (c) 2020 Leandro Barone. Usage is provided under the MIT License.
 from art import *
@@ -8,11 +9,13 @@ from art import *
 from classes import *
 from objects import *
 
+print("Playing on ver. 1.05")
+
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 # playerName = input("Username: ")
-playerName = "Flabbe"
+playerName = "Testing"
 
 currentArea = wheatField
 areaNames = [area.name for area in Area.list]
@@ -33,6 +36,10 @@ player.inventory.append(hewingStrikeTreatise)
 player.skills.append(basicAttack)
 player.skills.append(hewingStrike)
 
+if player.name == "Testing":
+    Player.equipGear(player, swordOfPower)
+    Player.updateStats(player)
+
 def printEquipment(equipment, label=""):
 
     basicInfo = f"{label}{equipment.name}"
@@ -47,34 +54,89 @@ def printAllEquipment(type):
     else:
         print(f"Equipped {type}: None")
 
+
+
+def playerDamage(player, selectedSkill):
+    damage = player.damage * ((selectedSkill.damage / 100) + 1)
+
+    return damage
+
+def enemyDamage(enemy):
+    damage = enemy.damage
+
+    return damage
+
 def playerTurn(player, enemy):
-    print(f"{player.name} is faster and siezes the first attack against {enemy.name}!")
+
     skillsNames = [item.name for item in player.skills]
-    actionIndex = survey.routines.select(f"Actions: ", options = skillsNames)
+    # skillsNames.append("Attempt escape")
+    skillsNamesAndTypes = [f"{item.name} - {item.type} - {item.damage}%" for item in player.skills]
+    # skillsNamesAndTypes.append("Attempt escape")
+
+    actionIndex = survey.routines.select(f"Actions: ", options = skillsNamesAndTypes)
     selectedSkill = player.skills[actionIndex]
     action = skillsNames[actionIndex]
 
-    print(f"{action} hit for {player.damage * selectedSkill.damage}")
+    print(f"{action} hit for {playerDamage(player, selectedSkill)}")
+
+    enemy.health -= playerDamage(player, selectedSkill)
+    if enemy.health <= 0:
+        enemy.health = 0
 
 def enemyTurn(player, enemy):
-    print(f"{enemy.name} is faster and siezes the first attack against {player.name}!")
+    # print(f"{enemy.name} hits for {enemyDamage(enemy)}")
+    player.health -= enemyDamage(enemy)
+
+def battleWon(player, enemy):
+    print(f"You defeated {enemy.name}")
+
+def battleLost(player, enemy):
+    print(f"You lost to {enemy.name}")
+
 
 def battle(player, enemy):
-
-    tprint(enemy.name)
-    print(f"Health: {enemy.health} | Energy: {enemy.energy}\n")
-    enemyProfile = from_image(enemy.image)
-    enemyProfile.to_terminal(columns=40)
-    print()
+    player.setup()
+    isPlayerTurn = False
 
     if player.speed >= enemy.speed:
-        playerTurn(player, enemy)
-    
+        isPlayerTurn = True
+        print(f"{player.name} is faster and siezes the first attack against {enemy.name}!")
     else:
-        enemyTurn(player, enemy)
+        isPlayerTurn = False
+        print(f"{enemy.name} is faster and siezes the first attack against {player.name}!")
 
-    print(f"{player.name} Battling")
-    print(f"{enemy.name} {enemy.health}")
+    ongoing = True
+    while ongoing:
+        clear_console()
+
+        tprint(enemy.name)
+        print(f"Health: {enemy.health} / {enemy.healthMax} | Energy: {enemy.energy} / {enemy.energyMax}\n")
+        enemyProfileImage = from_image(enemy.image)
+        enemyProfileImage.to_terminal(columns=40)
+        print()
+
+        tprint(player.name)
+        print(f"Health: {player.health} / {player.healthMax} | Energy: {player.energy} / {player.energyMax}\n")
+
+        if enemy.health <= 0:
+            battleWon(player, enemy)
+            ongoing = False
+        
+        elif player.health <= 0:
+            battleLost(player, enemy)
+            ongoing = False
+
+        elif action == "Attempt escape":
+            print("You successfully ran away")
+            ongoing = False
+
+        if isPlayerTurn:
+            playerTurn(player, enemy)
+            isPlayerTurn = False
+        
+        else:
+            enemyTurn(player, enemy)
+            isPlayerTurn = True
 
 gameloop = True
 while gameloop:
@@ -89,9 +151,10 @@ while gameloop:
     clear_console()
     if action == "Hunt":
         enemy = random.choice(currentArea.enemies)
+        selectedSkill = None
         battle(player, enemy)
     
-    if action == "Stats":
+    elif action == "Stats":
         tprint("Stats:")
         print(f"Health: {player.health} / {player.healthMax} | Energy: {player.energy} / {player.energyMax}\n")
 
@@ -102,7 +165,7 @@ while gameloop:
         print(f"Defense: {player.defense}")
         print(f"Speed: {player.speed}")
     
-    if action == "Travel":
+    elif action == "Travel":
         tprint("Travel")
         travelDestinationIndex = survey.routines.select("Available destinations: ", options = areaNames)
         travelDestination = Area.list[travelDestinationIndex]
@@ -111,12 +174,11 @@ while gameloop:
         currentArea = travelDestination
         print("You've arrived at", currentArea)
     
-    if action == "Inventory":
+    elif action == "Inventory":
         tprint("Inventory")
         player.equipmentInventory.sort(key=lambda item: item.type)
         inventoryNames = [item.name for item in player.inventory]
         equipmentInventoryNames = [item.name for item in player.equipmentInventory]
-        # equipmentInventoryNames = [item.name for item in player.equipmentInventory if isinstance(item, Equipment)]
 
         printAllEquipment("Weapon")
         printAllEquipment("Armor")
@@ -148,7 +210,7 @@ while gameloop:
 
             printEquipment(itemToInspect)
         
-        if action == 1:
+        elif action == 1:
             print("Equipping")
 
             itemToEquipIndex = survey.routines.select("Equippable gear: ", options = equipmentInventoryNames)
@@ -158,5 +220,5 @@ while gameloop:
             Player.equipGear(player, itemToEquip)
             Player.updateStats(player)
 
-        if action == 2:
+        elif action == 2:
             print("Returning")

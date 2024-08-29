@@ -26,16 +26,21 @@ class Player:
         self.damage = 0
         self.defense = 0
         self.speed = 10
+        self.energy = 50
         self.energyMax = 50
         self.critChance = 5
         self.critEff = 50
 
         for _, item in self.equipment.items():
             if item:
-                for attr in ['damage', 'defense', 'energy', 'critChance', 'critEff', 'speed']:
+                for attr in ['damage', 'defense', 'energyMax', 'critChance', 'critEff', 'speed']:
                     value = getattr(item, attr, None)
                     if value is not None:
                         setattr(self, attr, getattr(self, attr) + value)
+    
+    def setup(self):
+        self.health = self.healthMax
+        self.energy = self.energyMax
 
 
 class Enemy:
@@ -51,12 +56,17 @@ class Enemy:
         self.critChance = critChance
         self.critEff = critEff
         self.image = image
+
+    def setup(self):
+        self.health = self.healthMax
+        self.energy = self.energyMax
         
 class Equipment:
     list = []
-    def __init__(self, name, type, worth, damage, critChance, critEff, defense, speed, energy, description):
+    def __init__(self, name, type, weaponType, worth, damage, critChance, critEff, defense, speed, energy, description):
         self.name = name
         self.type = type
+        self.weaponType = weaponType
         self.worth = worth
         self.damage = damage
         self.critChance = critChance
