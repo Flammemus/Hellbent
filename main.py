@@ -58,6 +58,10 @@ def printAllEquipment(type):
 
 def playerDamage(player, selectedSkill):
     damage = player.damage * ((selectedSkill.damage / 100) + 1)
+    randomFloat = random.random() * 100
+    randomPercent = round(randomFloat, 2)
+    if player.critChance >= randomPercent:
+        damage *= ((player.critEff / 100) + 1)
 
     return damage
 
@@ -84,7 +88,7 @@ def playerTurn(player, enemy):
         enemy.health = 0
 
 def enemyTurn(player, enemy):
-    # print(f"{enemy.name} hits for {enemyDamage(enemy)}")
+    print(f"{enemy.name} hits for {enemyDamage(enemy)}")
     player.health -= enemyDamage(enemy)
 
 def battleWon(player, enemy):
@@ -92,7 +96,6 @@ def battleWon(player, enemy):
 
 def battleLost(player, enemy):
     print(f"You lost to {enemy.name}")
-
 
 def battle(player, enemy):
     player.setup()
