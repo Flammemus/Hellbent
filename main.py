@@ -20,7 +20,7 @@ print("Playing on ver. 0.1.6")
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-testAccount = False
+testAccount = True
 
 if testAccount:
     playerName = "JohnRPG"
@@ -81,30 +81,6 @@ def enemyDamage(enemy):
 
     return damage
 
-def playerTurn(player, enemy, log):
-
-    skillsNames = [item.name for item in player.skills]
-    skillsNamesAndTypes = [f"{item.name} - {item.type} - {item.damage}%" for item in player.skills]
-
-    actionIndex = survey.routines.select(f"Actions: ", options = skillsNamesAndTypes)
-    selectedSkill = player.skills[actionIndex] if actionIndex < len(player.skills) else None
-    action = skillsNames[actionIndex]
-
-    damageDealt, isCritical = (playerDamage(player, selectedSkill, log))
-
-    if isCritical:
-        log.append(f"{player.name} uses {action} and critical hits {enemy.name} for {int(damageDealt)} damage!")
-    else:
-        log.append(f"{player.name} uses {action} and hits {enemy.name} for {int(damageDealt)} damage")
-
-    enemy.health -= damageDealt
-    if enemy.health <= 0:
-        enemy.health = 0
-
-def enemyTurn(player, enemy, log):
-    log.append(f"{enemy.name} hits {player.name} for {enemyDamage(enemy)} damage")
-    player.health -= enemyDamage(enemy)
-
 def battleWon(player, enemy, log):
     print(f"You successfully defeated the {enemy.name}")
 
@@ -118,6 +94,7 @@ def battle(player, enemy):
 
     log = []
     log.reverse()
+    turnCounter = 0
 
     if player.speed >= enemy.speed:
         isPlayerTurn = True
@@ -143,7 +120,7 @@ def battle(player, enemy):
         tprint(player.name)
         print(f"Health: {int(player.health)} / {int(player.healthMax)} | Energy: {int(player.energy)} / {int(player.energyMax)}\n")
 
-        print("Log:")
+        print(f"Log:  |  Turn: {turnCounter}")
         for i in log:
             print(f"- {i}")
         print()
@@ -157,11 +134,33 @@ def battle(player, enemy):
             ongoing = False
 
         if isPlayerTurn:
-            playerTurn(player, enemy, log)
+
+            skillsNames = [item.name for item in player.skills]
+            skillsNamesAndTypes = [f"{item.name} - {item.type} - {item.damage}%" for item in player.skills]
+
+            actionIndex = survey.routines.select(f"Actions: ", options = skillsNamesAndTypes)
+            selectedSkill = player.skills[actionIndex] if actionIndex < len(player.skills) else None
+            action = skillsNames[actionIndex]
+
+            damageDealt, isCritical = (playerDamage(player, selectedSkill, log))
+
+            if isCritical:
+                log.append(f"{player.name} uses {action} and critical hits {enemy.name} for {int(damageDealt)} damage!")
+            else:
+                log.append(f"{player.name} uses {action} and hits {enemy.name} for {int(damageDealt)} damage")
+
+            enemy.health -= damageDealt
+            if enemy.health <= 0:
+                enemy.health = 0
+
+            turnCounter += 1
+
             isPlayerTurn = False
         
-        else:
-            enemyTurn(player, enemy, log)
+        elif not isPlayerTurn:
+            log.append(f"{enemy.name} hits {player.name} for {enemyDamage(enemy)} damage")
+            player.health -= enemyDamage(enemy)
+
             isPlayerTurn = True
 
 gameloop = True
