@@ -28,8 +28,8 @@ resilience = Passive(type="Passive", name="Resilience", bonus="5 Defense")
 placeHolder = get_resource_path("images/mudRat.jpg")
 mudRatImage = get_resource_path("images/mudRat.jpg")
 
-mudRat = Enemy(name="Mud Rat", health=int(50), healthMax=int(50), energy=int(50), energyMax=int(50), damage=2, defense=0, speed=50, critChance=5, critEff=50, image=mudRatImage)
-grassHopper = Enemy(name="Grass Hopper", health=int(25), healthMax=int(25), energy=int(50), energyMax=int(50), damage=1, defense=0, speed=12, critChance=5, critEff=50, image=placeHolder)
+mudRat = Enemy(name="Mud Rat", health=50, healthMax=50, energy=50, energyMax=50, damage=2, defense=0, speed=50, critChance=5, critEff=50, image=mudRatImage)
+grassHopper = Enemy(name="Grass Hopper", health=25, healthMax=25, energy=50, energyMax=50, damage=1, defense=0, speed=12, critChance=5, critEff=50, image=placeHolder)
 
 # === AREAS ===
 

@@ -9,13 +9,23 @@ from art import *
 from classes import *
 from objects import *
 
-print("Playing on ver. 1.05")
+tprint("\nTbRpg2")
+print("Git: https://github.com/Flammemus/TbRpg2")
+print("Playing on ver. 0.1.5")
+
+# 1.0.0 = full release
+# 0.1.0 = content update
+# 0.0.1 = patch
 
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# playerName = input("Username: ")
-playerName = "Testing"
+testAccount = False
+
+if testAccount:
+    playerName = "Testing"
+else:
+    playerName = input("Username: ")
 
 currentArea = wheatField
 areaNames = [area.name for area in Area.list]
@@ -36,7 +46,7 @@ player.inventory.append(hewingStrikeTreatise)
 player.skills.append(basicAttack)
 player.skills.append(hewingStrike)
 
-if player.name == "Testing":
+if testAccount:
     Player.equipGear(player, swordOfPower)
     Player.updateStats(player)
 
@@ -54,12 +64,11 @@ def printAllEquipment(type):
     else:
         print(f"Equipped {type}: None")
 
-
-
 def playerDamage(player, selectedSkill):
     damage = player.damage * ((selectedSkill.damage / 100) + 1)
     randomFloat = random.random() * 100
     randomPercent = round(randomFloat, 2)
+
     if player.critChance >= randomPercent:
         damage *= ((player.critEff / 100) + 1)
 
@@ -70,7 +79,7 @@ def enemyDamage(enemy):
 
     return damage
 
-def playerTurn(player, enemy):
+def playerTurn(player, enemy, log):
 
     skillsNames = [item.name for item in player.skills]
     # skillsNames.append("Attempt escape")
@@ -81,52 +90,65 @@ def playerTurn(player, enemy):
     selectedSkill = player.skills[actionIndex]
     action = skillsNames[actionIndex]
 
-    print(f"{action} hit for {playerDamage(player, selectedSkill)}")
+    log.append(f"{player.name} uses {action} and hits {enemy.name} for {int(playerDamage(player, selectedSkill))} damage")
 
     enemy.health -= playerDamage(player, selectedSkill)
     if enemy.health <= 0:
         enemy.health = 0
 
-def enemyTurn(player, enemy):
-    print(f"{enemy.name} hits for {enemyDamage(enemy)}")
+def enemyTurn(player, enemy, log):
+    log.append(f"{enemy.name} hits {player.name} for {enemyDamage(enemy)} damage")
     player.health -= enemyDamage(enemy)
 
-def battleWon(player, enemy):
-    print(f"You defeated {enemy.name}")
+def battleWon(player, enemy, log):
+    print(f"You successfully defeated the {enemy.name}")
 
-def battleLost(player, enemy):
-    print(f"You lost to {enemy.name}")
+def battleLost(player, enemy, log):
+    print(f"You fell in battle to{enemy.name}")
 
 def battle(player, enemy):
     player.setup()
+    enemy.setup()
     isPlayerTurn = False
+
+    log = [] # delete previous logs > 10
+    log.reverse()
 
     if player.speed >= enemy.speed:
         isPlayerTurn = True
-        print(f"{player.name} is faster and siezes the first attack against {enemy.name}!")
+        log.append(f"{player.name} is faster and siezes the first attack against {enemy.name}!")
     else:
         isPlayerTurn = False
-        print(f"{enemy.name} is faster and siezes the first attack against {player.name}!")
+        log.append(f"{enemy.name} is faster and siezes the first attack against {player.name}!")
 
     ongoing = True
     while ongoing:
         clear_console()
 
+        if len(log) > 8:
+            del log[0]
+
         tprint(enemy.name)
-        print(f"Health: {enemy.health} / {enemy.healthMax} | Energy: {enemy.energy} / {enemy.energyMax}\n")
+        print(f"Health: {int(enemy.health)} / {int(enemy.healthMax)} | Energy: {int(enemy.energy)} / {int(enemy.energyMax)}\n")
+
         enemyProfileImage = from_image(enemy.image)
         enemyProfileImage.to_terminal(columns=40)
         print()
 
         tprint(player.name)
-        print(f"Health: {player.health} / {player.healthMax} | Energy: {player.energy} / {player.energyMax}\n")
+        print(f"Health: {int(player.health)} / {int(player.healthMax)} | Energy: {int(player.energy)} / {int(player.energyMax)}\n")
+
+        print("Log:")
+        for i in log:
+            print(f"- {i}")
+        print()
 
         if enemy.health <= 0:
-            battleWon(player, enemy)
+            battleWon(player, enemy, log)
             ongoing = False
         
         elif player.health <= 0:
-            battleLost(player, enemy)
+            battleLost(player, enemy, log)
             ongoing = False
 
         elif action == "Attempt escape":
@@ -134,11 +156,11 @@ def battle(player, enemy):
             ongoing = False
 
         if isPlayerTurn:
-            playerTurn(player, enemy)
+            playerTurn(player, enemy, log)
             isPlayerTurn = False
         
         else:
-            enemyTurn(player, enemy)
+            enemyTurn(player, enemy, log)
             isPlayerTurn = True
 
 gameloop = True

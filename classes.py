@@ -42,7 +42,6 @@ class Player:
         self.health = self.healthMax
         self.energy = self.energyMax
 
-
 class Enemy:
     def __init__(self, name, health, healthMax, energy, energyMax, damage, defense, speed, critChance, critEff, image):
         self.name = name
