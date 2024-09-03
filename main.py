@@ -20,7 +20,7 @@ print("Playing on ver. 0.1.6")
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-testAccount = True
+testAccount = False
 
 if testAccount:
     playerName = "JohnRPG"
