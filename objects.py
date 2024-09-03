@@ -27,9 +27,10 @@ resilience = Passive(type="Passive", name="Resilience", bonus="5 Defense")
 
 placeHolder = get_resource_path("images/mudRat.jpg")
 mudRatImage = get_resource_path("images/mudRat.jpg")
+grassHopperImage = get_resource_path("images/lars.jpg")
 
 mudRat = Enemy(name="Mud Rat", health=50, healthMax=50, energy=50, energyMax=50, damage=2, defense=0, speed=50, critChance=5, critEff=50, image=mudRatImage)
-grassHopper = Enemy(name="Grass Hopper", health=25, healthMax=25, energy=50, energyMax=50, damage=1, defense=0, speed=12, critChance=5, critEff=50, image=placeHolder)
+grassHopper = Enemy(name="Grass Hopper", health=25, healthMax=25, energy=50, energyMax=50, damage=1, defense=0, speed=12, critChance=5, critEff=50, image=grassHopperImage)
 
 # === AREAS ===
 
@@ -47,11 +48,11 @@ hewingStrikeTreatise = Treatise("Manual of Hewing Strike", worth=250, type="Trea
 
 # === EQUIPMENT ===
 
-unarmed = Equipment("Unarmed", type="Weapon", weaponType="Fist", worth=0, damage=1, critChance=0, critEff=0, defense=0, speed=2, energy=0, description="Fuck it, we brawl")
+unarmed = Equipment("Unarmed", type="Weapon", weaponType="Fist", worth=0, damage=5, critChance=0, critEff=0, defense=0, speed=2, energy=0, description="Fuck it, we brawl")
 nude = Equipment("Nude", type="Armor", weaponType=0, worth=0, damage=0, critChance=0, critEff=0, defense=0, speed=2, energy=0, description="As nude as a newborn child")
 noTalisman = Equipment("Empty", type="Talisman", weaponType=0, worth=0, damage=0, critChance=0, critEff=0, defense=0, speed=0, energy=0, description="Even a rope would've done something..")
 
-rustySword = Equipment("Rusty Shortsword", type="Weapon", weaponType="Sword", worth=200, damage=5, critChance=2, critEff=10, defense=2, speed=0, energy=0, description=0)
+rustySword = Equipment("Rusty Shortsword", type="Weapon", weaponType="Sword", worth=200, damage=8, critChance=2, critEff=10, defense=2, speed=0, energy=0, description=0)
 swordOfPower = Equipment("Sword Of Power", type="Weapon", weaponType="Sword", worth=100, damage=20, critChance=10, critEff=5, defense=0, speed=0, energy=5, description=0)
 revealingBikini = Equipment("Revealing Bikini", type="Armor", weaponType=0, worth=100, damage=0, critChance=0, critEff=0, defense=3, speed=0, energy=15, description="The legendary sought after bikini that is a bit too revealing")
 goblinTrophy = Equipment("Goblin Trophy", type="Talisman", weaponType=0, worth=100, damage=0, critChance=0, critEff=12, defense=1, speed=0, energy=5, description="A goblin trophy in the form of its ear on a necklace chain")

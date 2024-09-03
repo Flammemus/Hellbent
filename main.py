@@ -11,7 +11,7 @@ from objects import *
 
 tprint("\nTbRpg2")
 print("Git: https://github.com/Flammemus/TbRpg2")
-print("Playing on ver. 0.1.5")
+print("Playing on ver. 0.1.6")
 
 # 1.0.0 = full release
 # 0.1.0 = content update
@@ -23,9 +23,9 @@ def clear_console():
 testAccount = False
 
 if testAccount:
-    playerName = "Testing"
+    playerName = "JohnRPG"
 else:
-    playerName = input("Username: ")
+    playerName = input("\nUsername: ")
 
 currentArea = wheatField
 areaNames = [area.name for area in Area.list]
@@ -64,15 +64,17 @@ def printAllEquipment(type):
     else:
         print(f"Equipped {type}: None")
 
-def playerDamage(player, selectedSkill):
+def playerDamage(player, selectedSkill, log):
     damage = player.damage * ((selectedSkill.damage / 100) + 1)
     randomFloat = random.random() * 100
     randomPercent = round(randomFloat, 2)
 
+    isCritical = False
     if player.critChance >= randomPercent:
         damage *= ((player.critEff / 100) + 1)
+        isCritical = True
 
-    return damage
+    return damage, isCritical
 
 def enemyDamage(enemy):
     damage = enemy.damage
@@ -82,17 +84,20 @@ def enemyDamage(enemy):
 def playerTurn(player, enemy, log):
 
     skillsNames = [item.name for item in player.skills]
-    # skillsNames.append("Attempt escape")
     skillsNamesAndTypes = [f"{item.name} - {item.type} - {item.damage}%" for item in player.skills]
-    # skillsNamesAndTypes.append("Attempt escape")
 
     actionIndex = survey.routines.select(f"Actions: ", options = skillsNamesAndTypes)
-    selectedSkill = player.skills[actionIndex]
+    selectedSkill = player.skills[actionIndex] if actionIndex < len(player.skills) else None
     action = skillsNames[actionIndex]
 
-    log.append(f"{player.name} uses {action} and hits {enemy.name} for {int(playerDamage(player, selectedSkill))} damage")
+    damageDealt, isCritical = (playerDamage(player, selectedSkill, log))
 
-    enemy.health -= playerDamage(player, selectedSkill)
+    if isCritical:
+        log.append(f"{player.name} uses {action} and critical hits {enemy.name} for {int(damageDealt)} damage!")
+    else:
+        log.append(f"{player.name} uses {action} and hits {enemy.name} for {int(damageDealt)} damage")
+
+    enemy.health -= damageDealt
     if enemy.health <= 0:
         enemy.health = 0
 
@@ -111,15 +116,15 @@ def battle(player, enemy):
     enemy.setup()
     isPlayerTurn = False
 
-    log = [] # delete previous logs > 10
+    log = []
     log.reverse()
 
     if player.speed >= enemy.speed:
         isPlayerTurn = True
-        log.append(f"{player.name} is faster and siezes the first attack against {enemy.name}!")
+        log.append(f"{player.name} is faster and siezes the first attack against {enemy.name}")
     else:
         isPlayerTurn = False
-        log.append(f"{enemy.name} is faster and siezes the first attack against {player.name}!")
+        log.append(f"{enemy.name} is faster and siezes the first attack against {player.name}")
 
     ongoing = True
     while ongoing:
@@ -149,10 +154,6 @@ def battle(player, enemy):
         
         elif player.health <= 0:
             battleLost(player, enemy, log)
-            ongoing = False
-
-        elif action == "Attempt escape":
-            print("You successfully ran away")
             ongoing = False
 
         if isPlayerTurn:
