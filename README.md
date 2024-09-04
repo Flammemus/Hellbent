@@ -1,6 +1,6 @@
 <h1>TbRpg2 (placeholder name)</h1>
 
-The .exe file can be found in dist folder. Does not work on macOS.
+<em>**To download the game click the green "<>Code" button, then at the bottom, click Download ZIP. To run the game, find and run the "TbRpg2.exe" file located in the "dist" folder.**</em>
 
 A text based RPG (2) game that is inspired by the games: Stoneshard and Deepwoken, the books The Name of the Wind and The Blacktongue Thief.
 
