@@ -23,21 +23,6 @@ hewingStrike = Active(type="Active", name="Hewing Strike", damage=20, energyCost
 
 resilience = Passive(type="Passive", name="Resilience", bonus="5 Defense")
 
-# === ENEMIES ===
-
-placeHolder = get_resource_path("images/mudRat.jpg")
-mudRatImage = get_resource_path("images/mudRat.jpg")
-grassHopperImage = get_resource_path("images/lars.jpg")
-
-mudRat = Enemy(name="Mud Rat", health=50, healthMax=50, energy=50, energyMax=50, damage=2, defense=0, speed=50, critChance=5, critEff=50, image=mudRatImage)
-grassHopper = Enemy(name="Grass Hopper", health=25, healthMax=25, energy=50, energyMax=50, damage=1, defense=0, speed=12, critChance=5, critEff=50, image=grassHopperImage)
-
-# === AREAS ===
-
-wheatField = Area("Wheat Field", actions=["Hunt", "Stats", "Inventory", "Travel"], enemies=[mudRat, grassHopper])
-willowForest = Area("Willow Forest", actions=["Hunt", "Stats", "Inventory", "Travel"], enemies=[mudRat, grassHopper])
-safeTown = Area("Safe Town", actions=["Stats", "Inventory", "Travel"], enemies=[])
-
 # === ITEMS ===
 
 ratLeather = Item("Rat Leather", type="Valuable", worth=50)
@@ -56,3 +41,18 @@ rustySword = Equipment("Rusty Shortsword", type="Weapon", weaponType="Sword", wo
 swordOfPower = Equipment("Sword Of Power", type="Weapon", weaponType="Sword", worth=100, damage=20, critChance=10, critEff=5, defense=0, speed=0, energy=5, description=0)
 revealingBikini = Equipment("Revealing Bikini", type="Armor", weaponType=0, worth=100, damage=0, critChance=0, critEff=0, defense=3, speed=0, energy=15, description="The legendary sought after bikini that is a bit too revealing")
 goblinTrophy = Equipment("Goblin Trophy", type="Talisman", weaponType=0, worth=100, damage=0, critChance=0, critEff=12, defense=1, speed=0, energy=5, description="A goblin trophy in the form of its ear on a necklace chain")
+
+# === ENEMIES ===
+
+placeHolder = get_resource_path("images/mudRat.jpg")
+mudRatImage = get_resource_path("images/mudRat.jpg")
+grassHopperImage = get_resource_path("images/lars.jpg")
+
+mudRat = Enemy(name="Mud Rat", health=50, healthMax=50, energy=50, energyMax=50, damage=2, defense=0, speed=50, critChance=5, critEff=50, itemPool=[ratLeather], image=mudRatImage)
+grassHopper = Enemy(name="Grass Hopper", health=25, healthMax=25, energy=50, energyMax=50, damage=1, defense=0, speed=12, critChance=5, critEff=50, itemPool=[hewingStrikeTreatise], image=grassHopperImage)
+
+# === AREAS ===
+
+wheatField = Area("Wheat Field", actions=["Hunt", "Stats", "Inventory", "Travel"], enemies=[mudRat, grassHopper])
+willowForest = Area("Willow Forest", actions=["Hunt", "Stats", "Inventory", "Travel"], enemies=[mudRat, grassHopper])
+safeTown = Area("Safe Town", actions=["Stats", "Inventory", "Travel"], enemies=[])

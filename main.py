@@ -30,7 +30,7 @@ else:
 currentArea = wheatField
 areaNames = [area.name for area in Area.list]
 
-player = Player(name=playerName, health=100, healthMax=100, energy=50, energyMax=50, damage=0, defense=0, speed=10, critChance=5, critEff=50)
+player = Player(name=playerName, money=20, health=100, healthMax=100, energy=50, energyMax=50, damage=0, defense=0, speed=10, critChance=5, critEff=50)
 player.equipGear(unarmed)
 player.equipGear(nude)
 player.equipGear(noTalisman)
@@ -113,6 +113,12 @@ def battle(player, enemy):
         tprint(enemy.name)
         print(f"Health: {int(enemy.health)} / {int(enemy.healthMax)} | Energy: {int(enemy.energy)} / {int(enemy.energyMax)}\n")
 
+        print(f"{enemy.name} item pool:")
+        for i in enemy.itemPool:
+            print(f"- {i.name}")
+
+        print()
+
         enemyProfileImage = from_image(enemy.image)
         enemyProfileImage.to_terminal(columns=40)
         print()
@@ -120,7 +126,7 @@ def battle(player, enemy):
         tprint(player.name)
         print(f"Health: {int(player.health)} / {int(player.healthMax)} | Energy: {int(player.energy)} / {int(player.energyMax)}\n")
 
-        print(f"Log:  |  Turn: {turnCounter}")
+        print(f"Log:  |  Turn: {turnCounter}\n")
         for i in log:
             print(f"- {i}")
         print()
@@ -202,6 +208,7 @@ while gameloop:
     elif action == "Inventory":
         tprint("Inventory")
         player.equipmentInventory.sort(key=lambda item: item.type)
+        player.inventory.sort(key=lambda item: item.type)
         inventoryNames = [item.name for item in player.inventory]
         equipmentInventoryNames = [item.name for item in player.equipmentInventory]
 
@@ -218,32 +225,44 @@ while gameloop:
             print(f"{item.name} - {item.type}")
         print()
 
-        player.inventory.sort(key=lambda item: item.type)
         print("Items:\n")
+        print(f"Tones: {player.money}\n")
         for item in player.inventory:
             print(f"{item.name} - {item.type}")
         print()
 
-        action = survey.routines.select("Available action:", options = ("Inspect", "Equip", "Back"))
+        action = survey.routines.select("Available action:", options = ("Inspect", "Equip", "Unequip", "Back"))
 
         if action == 0:
-            print("Inspecting")
-
             itemToInspectIndex = survey.routines.select("Your items: ", options = inventoryNames)
             itemToInspect = player.inventory[itemToInspectIndex]
+
             print()
-
             printEquipment(itemToInspect)
-        
-        elif action == 1:
-            print("Equipping")
 
+        elif action == 1:
             itemToEquipIndex = survey.routines.select("Equippable gear: ", options = equipmentInventoryNames)
             itemToEquip = player.equipmentInventory[itemToEquipIndex]
-            print()
 
             Player.equipGear(player, itemToEquip)
             Player.updateStats(player)
-
+        
         elif action == 2:
+            itemToUnequipList = []
+            itemToUnequipList.append(f"Weapon: {player.equipment["Weapon"].name}")
+            itemToUnequipList.append(f"Armor: {player.equipment["Armor"].name}")
+            itemToUnequipList.append(f"Talisman: {player.equipment["Talisman"].name}")
+
+            itemToUnequipIndex = survey.routines.select("Unequip gear: ", options = itemToUnequipList)
+
+            if itemToUnequipIndex == 0:
+                Player.equipGear(player, unarmed)
+            if itemToUnequipIndex == 0:
+                Player.equipGear(player, nude)
+            if itemToUnequipIndex == 0:
+                Player.equipGear(player, noTalisman)
+            
+            Player.updateStats(player)
+
+        elif action == 3:
             print("Returning")

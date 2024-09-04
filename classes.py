@@ -1,6 +1,7 @@
 class Player:
-    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense, speed, critChance, critEff):
+    def __init__(self, name, money, health, healthMax, energy, energyMax, damage, defense, speed, critChance, critEff):
         self.name = name
+        self.money = money
         self.health = health
         self.healthMax = healthMax
         self.energy = energy
@@ -43,7 +44,7 @@ class Player:
         self.energy = self.energyMax
 
 class Enemy:
-    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense, speed, critChance, critEff, image):
+    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense, speed, critChance, critEff, image, itemPool):
         self.name = name
         self.health = health
         self.healthMax = healthMax
@@ -55,6 +56,7 @@ class Enemy:
         self.critChance = critChance
         self.critEff = critEff
         self.image = image
+        self.itemPool = itemPool
 
     def setup(self):
         self.health = self.healthMax
