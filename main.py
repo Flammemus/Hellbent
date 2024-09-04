@@ -1,7 +1,6 @@
 import survey
 import os
 import random
-import time
 
 from ascii_magic import from_image # Copyright (c) 2020 Leandro Barone. Usage is provided under the MIT License.
 from art import *
@@ -10,17 +9,24 @@ from classes import *
 from objects import *
 
 tprint("\nTbRpg2")
-print("Git: https://github.com/Flammemus/TbRpg2")
+print("Github: https://github.com/Flammemus/TbRpg2")
 print("Playing on ver. 0.1.6")
 
 # 1.0.0 = full release
 # 0.1.0 = content update
 # 0.0.1 = patch
 
-def clear_console():
-    os.system('cls' if os.name == 'nt' else 'clear')
+# TODO
 
-testAccount = False
+# item-drops from enemies with rarity
+# usable treatises
+# inventory revamp | one main inventory where a for loop sorts items in its respected inventory i.e equipment inv, item inv, consumable inv dependant on item type
+
+# shops and reputation
+# bounties
+# dungeons
+
+testAccount = True
 
 if testAccount:
     playerName = "JohnRPG"
@@ -45,10 +51,14 @@ player.inventory.append(hewingStrikeTreatise)
 
 player.skills.append(basicAttack)
 player.skills.append(hewingStrike)
+player.skills.append(escapeBattle)
 
 if testAccount:
     Player.equipGear(player, swordOfPower)
     Player.updateStats(player)
+
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def printEquipment(equipment, label=""):
 
@@ -86,6 +96,8 @@ def battleWon(player, enemy, log):
 
 def battleLost(player, enemy, log):
     print(f"You fell in battle to{enemy.name}")
+
+# ==================== BATTLE ====================
 
 def battle(player, enemy):
     player.setup()
@@ -139,14 +151,19 @@ def battle(player, enemy):
             battleLost(player, enemy, log)
             ongoing = False
 
+        # ==== Player turn ====
+
         if isPlayerTurn:
 
             skillsNames = [item.name for item in player.skills]
             skillsNamesAndTypes = [f"{item.name} - {item.type} - {item.damage}%" for item in player.skills]
 
             actionIndex = survey.routines.select(f"Actions: ", options = skillsNamesAndTypes)
-            selectedSkill = player.skills[actionIndex] if actionIndex < len(player.skills) else None
+            selectedSkill = player.skills[actionIndex]
             action = skillsNames[actionIndex]
+
+            if action == "Escape Battle":
+                ongoing = False
 
             damageDealt, isCritical = (playerDamage(player, selectedSkill, log))
 

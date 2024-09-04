@@ -19,6 +19,8 @@ def get_resource_path(relative_path):
 basicAttack = Active(type="Active", name="Basic Attack", damage=0, energyCost=0, cooldown=0, bonus=0)
 hewingStrike = Active(type="Active", name="Hewing Strike", damage=20, energyCost=15, cooldown=3, bonus=0)
 
+escapeBattle = Active(type="Active", name="Escape Battle", damage=0, energyCost=15, cooldown=0, bonus=0)
+
 # --- Passives ---
 
 resilience = Passive(type="Passive", name="Resilience", bonus="5 Defense")
@@ -29,7 +31,7 @@ ratLeather = Item("Rat Leather", type="Valuable", worth=50)
 
 # --- Treatise ---
 
-hewingStrikeTreatise = Treatise("Manual of Hewing Strike", worth=250, type="Treatise", skill=hewingStrike, description="A strike so hard and hewingfull..")
+hewingStrikeTreatise = Treatise("Manual of Hewing Strike", worth=250, type="Treatise", skill=hewingStrike, description="A strike so hard and hewing..")
 
 # === EQUIPMENT ===
 
