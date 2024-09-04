@@ -8,13 +8,10 @@ The idea is a RPG world where you play as a mercenary (?) that takes on jobs for
 
 ## Game Screenshots
 
-### Intro Screen
 ![Intro Screen](./readmeSC/introScreen.png)
 
-### Battle Screen
 ![Battle Screen](./readmeSC/battleScreen.png)
 
-### Inventory Screen
 ![Inventory Screen](./readmeSC/inventoryScreen.png)
 
 
