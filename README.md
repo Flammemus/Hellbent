@@ -1,8 +1,12 @@
 <h1>TbRpg2 (placeholder name)</h1>
 
-<em>To download the game click the green "<>Code" button located above the project files, then at the bottom of the dropdown, click Download ZIP.
+## Download:
 
-To run the game, find and run the "TbRpg2.exe" file located in the "dist" folder. If theres a windows security popup, click on "Show more", then "Run anyway".</em>
+To download the game click the green "<>Code" button located above the project files, then at the bottom of the dropdown, click Download ZIP.
+
+To run the game, find and run the "TbRpg2.exe" file located in the "dist" folder. If theres a windows security popup, click on "Show more", then "Run anyway".
+
+## Description
 
 A text based RPG (2) game that is inspired by the games: Stoneshard and Deepwoken, the books The Name of the Wind and The Blacktongue Thief.
 
