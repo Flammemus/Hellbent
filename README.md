@@ -10,7 +10,7 @@ To run the game, find and run the "TbRpg2.exe" file located in the "dist" folder
 
 A text based RPG (2) game that is inspired by the games: Stoneshard and Deepwoken, the books The Name of the Wind and The Blacktongue Thief.
 
-The idea is a RPG world where you play as a mercenary (?) that takes on jobs for tones, the worlds currency. There is no leveling system, all progress and stats are dependant on tones and exploration. With tones you can buy better gear and treatises to learn powerful abilities.
+The idea is a RPG world where you play as a mercenary (?) that takes on jobs for tones, the worlds currency. There is no leveling system, all progress and stats are dependant on tones and exploration. With tones you can buy better gear and treatises to learn powerful abilities and enhance your character.
 
 ## Game Screenshots
 
