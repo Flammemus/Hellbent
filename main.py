@@ -36,15 +36,27 @@ else:
 currentArea = wheatField
 areaNames = [area.name for area in Area.list]
 
-player = Player(name=playerName, money=20, health=100, healthMax=100, energy=50, energyMax=50, damage=0, defense=0, speed=10, critChance=5, critEff=50)
+player = Player(name=playerName, money=20, stats={
+    "Health": 100,
+    "HealthMax": 100,
+    "Energy": 50,
+    "EnergyMax": 50,
+    "Damage": 0,
+    "Defence": 10,
+    "Weight": 0,
+    "Speed": 10,
+    "CritChance": 5,
+    "CritEff": 50
+})
+
 player.equipGear(unarmed)
 player.equipGear(nude)
 player.equipGear(noTalisman)
 
-player.equipmentInventory.append(rustySword)
-player.equipmentInventory.append(swordOfPower)
-player.equipmentInventory.append(revealingBikini)
-player.equipmentInventory.append(goblinTrophy)
+player.inventory.append(rustySword)
+player.inventory.append(swordOfPower)
+player.inventory.append(revealingBikini)
+player.inventory.append(goblinTrophy)
 
 player.inventory.append(ratLeather)
 player.inventory.append(hewingStrikeTreatise)
@@ -75,13 +87,13 @@ def printAllEquipment(type):
         print(f"Equipped {type}: None")
 
 def playerDamage(player, selectedSkill, log):
-    damage = player.damage * ((selectedSkill.damage / 100) + 1)
+    damage = player.stats["Damage"] * ((selectedSkill.damage / 100) + 1)
     randomFloat = random.random() * 100
     randomPercent = round(randomFloat, 2)
 
     isCritical = False
-    if player.critChance >= randomPercent:
-        damage *= ((player.critEff / 100) + 1)
+    if player.stats["CritChance"] >= randomPercent:
+        damage *= ((player.stats["CritEff"] / 100) + 1)
         isCritical = True
 
     return damage, isCritical
@@ -108,7 +120,7 @@ def battle(player, enemy):
     log.reverse()
     turnCounter = 0
 
-    if player.speed >= enemy.speed:
+    if player.stats["Speed"] >= enemy.stats["Speed"]:
         isPlayerTurn = True
         log.append(f"{player.name} is faster and siezes the first attack against {enemy.name}")
     else:
@@ -123,7 +135,7 @@ def battle(player, enemy):
             del log[0]
 
         tprint(enemy.name)
-        print(f"Health: {int(enemy.health)} / {int(enemy.healthMax)} | Energy: {int(enemy.energy)} / {int(enemy.energyMax)}\n")
+        print(f"Health: {int(enemy.stats["Health"])} / {int(enemy.stats["HealthMax"])} | Energy: {int(enemy.stats["Energy"])} / {int(enemy.stats["EnergyMax"])}\n")
 
         print(f"{enemy.name} item pool:")
         for i in enemy.itemPool:
@@ -136,7 +148,7 @@ def battle(player, enemy):
         print()
 
         tprint(player.name)
-        print(f"Health: {int(player.health)} / {int(player.healthMax)} | Energy: {int(player.energy)} / {int(player.energyMax)}\n")
+        print(f"Health: {int(player.stats["Health"])} / {int(player.stats["HealthMax"])} | Energy: {int(player.stats["Energy"])} / {int(player.stats["EnergyMax"])}\n")
 
         print(f"Log:  |  Turn: {turnCounter}\n")
         for i in log:
@@ -173,8 +185,8 @@ def battle(player, enemy):
                 log.append(f"{player.name} uses {action} and hits {enemy.name} for {int(damageDealt)} damage")
 
             enemy.health -= damageDealt
-            if enemy.health <= 0:
-                enemy.health = 0
+            if enemy.stats["Health"] <= 0:
+                enemy.stats["Health"] = 0
 
             turnCounter += 1
 
@@ -182,7 +194,7 @@ def battle(player, enemy):
         
         elif not isPlayerTurn:
             log.append(f"{enemy.name} hits {player.name} for {enemyDamage(enemy)} damage")
-            player.health -= enemyDamage(enemy)
+            player.stats["Health"] -= enemyDamage(enemy)
 
             isPlayerTurn = True
 
@@ -190,6 +202,7 @@ gameloop = True
 while gameloop:
 
     player.updateStats()
+    player.sortInventory()
 
     print()
     actionIndex = survey.routines.select(f"{currentArea.name} actions: ", options = currentArea.actions)
@@ -204,14 +217,14 @@ while gameloop:
     
     elif action == "Stats":
         tprint("Stats:")
-        print(f"Health: {player.health} / {player.healthMax} | Energy: {player.energy} / {player.energyMax}\n")
+        print(f"Health: {player.stats["Health"]} / {player.stats["HealthMax"]} | Energy: {player.stats["Energy"]} / {player.stats["EnergyMax"]}\n")
 
-        print(f"Base damage: {player.damage}")
-        print(f"Crit chance: {player.critChance}%")
-        print(f"Crit efficiency: {player.critEff}%\n")
+        print(f"Base damage: {player.stats["Damage"]}")
+        print(f"Crit chance: {player.stats["CritChance"]}%")
+        print(f"Crit efficiency: {player.stats["CritEff"]}%\n")
 
-        print(f"Defense: {player.defense}")
-        print(f"Speed: {player.speed}")
+        print(f"Defense: {player.stats["Defence"]}")
+        print(f"Speed: {player.stats["Speed"]}")
     
     elif action == "Travel":
         tprint("Travel")
@@ -224,8 +237,7 @@ while gameloop:
     
     elif action == "Inventory":
         tprint("Inventory")
-        player.equipmentInventory.sort(key=lambda item: item.type)
-        player.inventory.sort(key=lambda item: item.type)
+
         inventoryNames = [item.name for item in player.inventory]
         equipmentInventoryNames = [item.name for item in player.equipmentInventory]
 
@@ -244,7 +256,7 @@ while gameloop:
 
         print("Items:\n")
         print(f"Tones: {player.money}\n")
-        for item in player.inventory:
+        for item in player.itemInventory:
             print(f"{item.name} - {item.type}")
         print()
 

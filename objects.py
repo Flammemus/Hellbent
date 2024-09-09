@@ -48,10 +48,31 @@ goblinTrophy = Equipment("Goblin Trophy", type="Talisman", weaponType=0, worth=1
 
 placeHolder = get_resource_path("images/mudRat.jpg")
 mudRatImage = get_resource_path("images/mudRat.jpg")
-grassHopperImage = get_resource_path("images/lars.jpg")
 
-mudRat = Enemy(name="Mud Rat", health=50, healthMax=50, energy=50, energyMax=50, damage=2, defense=0, speed=50, critChance=5, critEff=50, itemPool=[ratLeather], image=mudRatImage)
-grassHopper = Enemy(name="Grass Hopper", health=25, healthMax=25, energy=50, energyMax=50, damage=1, defense=0, speed=12, critChance=5, critEff=50, itemPool=[hewingStrikeTreatise], image=grassHopperImage)
+mudRat = Enemy(name="Mud Rat", itemPool=[ratLeather], image=mudRatImage, stats={
+    "Health": None,
+    "HealthMax": 50,
+    "Energy": None,
+    "EnergyMax": 30,
+    "Damage": 10,
+    "Defence": 5,
+    "Weight": 3,
+    "Speed": 8,
+    "CritChance": 5,
+    "CritEff": 50
+})
+grassHopper = Enemy(name="Grass Hopper", itemPool=[hewingStrikeTreatise], image=placeHolder, stats={
+    "Health": None,
+    "HealthMax": 50,
+    "Energy": None,
+    "EnergyMax": 30,
+    "Damage": 10,
+    "Defence": 5,
+    "Weight": 3,
+    "Speed": 8,
+    "CritChance": 5,
+    "CritEff": 50
+})
 
 # === AREAS ===
 

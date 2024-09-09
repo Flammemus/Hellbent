@@ -1,66 +1,84 @@
 class Player:
-    def __init__(self, name, money, health, healthMax, energy, energyMax, damage, defense, speed, critChance, critEff):
+    def __init__(self, name, money, stats):
         self.name = name
         self.money = money
-        self.health = health
-        self.healthMax = healthMax
-        self.energy = energy
-        self.energyMax = energyMax
-        self.damage = damage
-        self.defense = defense
-        self.speed = speed
-        self.critChance = critChance
-        self.critEff = critEff
+        self.stats = {
+            "Health": None,
+            "HealthMax": None,
+            "Energy": None,
+            "EnergyMax": None,
+            "Damage": None,
+            "Defence": None,
+            "Weight": None,
+            "Speed": None,
+            "CritChance": None,
+            "CritEff": None
+        }
         self.equipment = {
             "Weapon": None,
             "Armor": None,
             "Talisman": None
         }
-        self.equipmentInventory = []
         self.inventory = []
+        self.equipmentInventory = []
+        self.itemInventory = []
         self.skills = []
 
     def equipGear(player, item):
         player.equipment[item.type] = item
 
     def updateStats(self):
-        self.damage = 0
-        self.defense = 0
-        self.speed = 10
-        self.energy = 50
-        self.energyMax = 50
-        self.critChance = 5
-        self.critEff = 50
+        self.stats["HealthMax"] = 0
+        self.stats["Defence"] = 0
+        self.stats["Weight"] = 0
+        self.stats["Speed"] = 10
+        self.stats["EnergyMax"] = 50
+        self.stats["CritChance"] = 5
+        self.stats["CritEff"] = 50
 
         for _, item in self.equipment.items():
             if item:
-                for attr in ['damage', 'defense', 'energyMax', 'critChance', 'critEff', 'speed']:
+                for attr in ['Damage', 'Defence', 'EnergyMax', 'CritChance', 'CritEff', 'Weight']:
                     value = getattr(item, attr, None)
                     if value is not None:
                         setattr(self, attr, getattr(self, attr) + value)
     
+    def sortInventory(self):
+        self.equipmentInventory.clear()
+        self.itemInventory.clear()
+        self.inventory.sort(key=lambda item: item.type)
+
+        for item in self.inventory:
+            if isinstance(item, Equipment):
+                self.equipmentInventory.append(item)
+            elif isinstance(item, Item) or isinstance(item, Treatise):
+                self.itemInventory.append(item)
+    
     def setup(self):
-        self.health = self.healthMax
-        self.energy = self.energyMax
+        self.stats["Health"] = self.stats["HealthMax"]
+        self.stats["Energy"] = self.stats["EnergyMax"]
 
 class Enemy:
-    def __init__(self, name, health, healthMax, energy, energyMax, damage, defense, speed, critChance, critEff, image, itemPool):
+    def __init__(self, name, image, itemPool, stats):
         self.name = name
-        self.health = health
-        self.healthMax = healthMax
-        self.energy = energy
-        self.energyMax = energyMax
-        self.damage = damage
-        self.defense = defense
-        self.speed = speed
-        self.critChance = critChance
-        self.critEff = critEff
+        self.stats = {
+            "Health": None,
+            "HealthMax": None,
+            "Energy": None,
+            "EnergyMax": None,
+            "Damage": None,
+            "Defence": None,
+            "Weight": None,
+            "Speed": None,
+            "CritChance": None,
+            "CritEff": None
+        }
         self.image = image
         self.itemPool = itemPool
 
     def setup(self):
-        self.health = self.healthMax
-        self.energy = self.energyMax
+        self.health = self.stats["HealthMax"]
+        self.energy = self.stats["EnergyMax"]
         
 class Equipment:
     list = []
