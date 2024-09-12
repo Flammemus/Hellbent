@@ -35,24 +35,27 @@ hewingStrikeTreatise = Treatise("Manual of Hewing Strike", worth=250, type="Trea
 
 # === EQUIPMENT ===
 
-unarmed = Equipment("Unarmed", type="Weapon", weaponType="Fist", worth=0, damage=5, critChance=0, critEff=0, defense=0, speed=2, energy=0, description="Fuck it, we brawl")
-nude = Equipment("Nude", type="Armor", weaponType=0, worth=0, damage=0, critChance=0, critEff=0, defense=0, speed=2, energy=0, description="As nude as a newborn child")
-noTalisman = Equipment("Empty", type="Talisman", weaponType=0, worth=0, damage=0, critChance=0, critEff=0, defense=0, speed=0, energy=0, description="Even a rope would've done something..")
+# Stats cheat sheet -  "Health": None, "HealthMax": None, "Energy": None, "EnergyMax": None, "Damage": None, "Defence": None, "Weight": None, "Speed": None, "CritChance": None, "CritEff": None
 
-rustySword = Equipment("Rusty Shortsword", type="Weapon", weaponType="Sword", worth=200, damage=8, critChance=2, critEff=10, defense=2, speed=0, energy=0, description=0)
-swordOfPower = Equipment("Sword Of Power", type="Weapon", weaponType="Sword", worth=100, damage=20, critChance=10, critEff=5, defense=0, speed=0, energy=5, description=0)
-revealingBikini = Equipment("Revealing Bikini", type="Armor", weaponType=0, worth=100, damage=0, critChance=0, critEff=0, defense=3, speed=0, energy=15, description="The legendary sought after bikini that is a bit too revealing")
-goblinTrophy = Equipment("Goblin Trophy", type="Talisman", weaponType=0, worth=100, damage=0, critChance=0, critEff=12, defense=1, speed=0, energy=5, description="A goblin trophy in the form of its ear on a necklace chain")
+unarmed = Weapon("Unarmed", type="Fist", worth=0, description="Fuck it, we brawl", stats={"Damage": 6})
+nude = Equipment("Nude", type="Armor", worth=0, description="As nude as a newborn child", stats={"Speed": 10})
+noTalisman = Equipment("Empty", type="Talisman", worth=0, description="Even a rope would've done something..", stats={})
+
+rustySword = Weapon("Rusty Shortsword", type="Sword", worth=200, description=0, stats={"Damage": 8, "Weight": 10, "CritChance": 2, "CritEff": 10})
+swordOfPower = Weapon("Sword Of Power", type="Sword", worth=100, description=0, stats={"EnergyMax": 15, "Damage": 15, "Defence": 5, "Weight": 25, "CritChance": 8, "CritEff": 25})
+
+revealingBikini = Equipment("Revealing Bikini", type="Armor", worth=100, description="The legendary sought after bikini that is a bit too revealing", stats={"Energy": 10, "Defence": 2, "Weight": 2, "Speed": 5, "CritChance": 5})
+goblinTrophy = Equipment("Goblin Trophy", type="Talisman", worth=100, description="A goblin trophy in the form of its ear on a necklace chain", stats={"Health": 15, "Weight": 5, "CritEff": 15})
 
 # === ENEMIES ===
 
 placeHolder = get_resource_path("images/mudRat.jpg")
 mudRatImage = get_resource_path("images/mudRat.jpg")
 
-mudRat = Enemy(name="Mud Rat", itemPool=[ratLeather], image=mudRatImage, stats={
-    "Health": None,
+mudRat = Enemy(name="Mud Rat", image=mudRatImage, itemPool=[ratLeather], stats={
+    "Health": 50,
     "HealthMax": 50,
-    "Energy": None,
+    "Energy": 30,
     "EnergyMax": 30,
     "Damage": 10,
     "Defence": 5,
@@ -61,10 +64,10 @@ mudRat = Enemy(name="Mud Rat", itemPool=[ratLeather], image=mudRatImage, stats={
     "CritChance": 5,
     "CritEff": 50
 })
-grassHopper = Enemy(name="Grass Hopper", itemPool=[hewingStrikeTreatise], image=placeHolder, stats={
-    "Health": None,
+grassHopper = Enemy(name="Grass Hopper", image=placeHolder, itemPool=[hewingStrikeTreatise], stats={
+    "Health": 50,
     "HealthMax": 50,
-    "Energy": None,
+    "Energy": 30,
     "EnergyMax": 30,
     "Damage": 10,
     "Defence": 5,

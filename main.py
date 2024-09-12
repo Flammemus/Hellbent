@@ -73,14 +73,29 @@ def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def printEquipment(equipment, label=""):
-
     basicInfo = f"{label}{equipment.name}"
-    attributeDetails = [f"{attr.capitalize()}: {value}" for attr, value in vars(equipment).items() if value != 0 and attr not in ['name']] # Thank you, ChatGPT
-    allDetails = [basicInfo] + attributeDetails
 
+    # Fetch the stats dictionary if it exists, and only print values that are not None or 0
+    stats = getattr(equipment, 'stats', None)
+    if stats:
+        # Show only meaningful stats (skip None and 0)
+        attributeDetails = [f"{attr}: {value}" for attr, value in stats.items() if value not in [None, 0]]
+    else:
+        # Handle other attributes in case stats are not present (and skip None values)
+        attributeDetails = [f"{attr.capitalize()}: {value}" for attr, value in vars(equipment).items() if value not in [None, 0] and attr not in ['name', 'stats']]
+
+    # If no stats are relevant, just show the basic info
+    if not attributeDetails:
+        attributeDetails = ["No relevant stats"]
+
+    # Combine and print
+    allDetails = [basicInfo] + attributeDetails
     print(" - ".join(allDetails))
 
+
+
 def printAllEquipment(type):
+
     if player.equipment[type] != None:
         printEquipment(player.equipment[type], label=f"Equipped {type}: ")
     else:
@@ -99,7 +114,7 @@ def playerDamage(player, selectedSkill, log):
     return damage, isCritical
 
 def enemyDamage(enemy):
-    damage = enemy.damage
+    damage = enemy.stats["Damage"]
 
     return damage
 
@@ -155,11 +170,11 @@ def battle(player, enemy):
             print(f"- {i}")
         print()
 
-        if enemy.health <= 0:
+        if enemy.stats["Health"] <= 0:
             battleWon(player, enemy, log)
             ongoing = False
         
-        elif player.health <= 0:
+        elif player.stats["Health"] <= 0:
             battleLost(player, enemy, log)
             ongoing = False
 
@@ -184,7 +199,7 @@ def battle(player, enemy):
             else:
                 log.append(f"{player.name} uses {action} and hits {enemy.name} for {int(damageDealt)} damage")
 
-            enemy.health -= damageDealt
+            enemy.stats["Health"] -= damageDealt
             if enemy.stats["Health"] <= 0:
                 enemy.stats["Health"] = 0
 
@@ -216,6 +231,7 @@ while gameloop:
         battle(player, enemy)
     
     elif action == "Stats":
+        player.updateStats()
         tprint("Stats:")
         print(f"Health: {player.stats["Health"]} / {player.stats["HealthMax"]} | Energy: {player.stats["Energy"]} / {player.stats["EnergyMax"]}\n")
 
@@ -224,7 +240,8 @@ while gameloop:
         print(f"Crit efficiency: {player.stats["CritEff"]}%\n")
 
         print(f"Defense: {player.stats["Defence"]}")
-        print(f"Speed: {player.stats["Speed"]}")
+        print(f"Weight: {player.stats["Weight"]}")
+        print(f"Speed: {int(player.stats["Speed"])}")
     
     elif action == "Travel":
         tprint("Travel")
