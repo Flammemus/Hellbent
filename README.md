@@ -2,9 +2,13 @@
 
 ## Download:
 
-To download the game click the green "<>Code" button located above the project files, then at the bottom of the dropdown, click Download ZIP.
+To download the game:
 
-To run the game, find and run the "TbRpg2.exe" file located in the "dist" folder. If theres a windows security popup, click on "Show more", then "Run anyway".
+click the green "<>Code" button located above the project files, then at the bottom of the dropdown, click Download ZIP.
+
+To run the game:
+
+find and run the "TbRpg2.exe" file located in the "dist" folder. If theres a windows security popup, click on "Show more", then "Run anyway".
 
 ## Description
 
