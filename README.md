@@ -1,4 +1,4 @@
-<h1>TbRpg2 (placeholder name)</h1>
+<h1>Hellbent</h1>
 
 ## Download:
 
